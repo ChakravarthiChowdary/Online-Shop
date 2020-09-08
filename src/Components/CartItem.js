@@ -46,7 +46,7 @@ const CartItem = ({ cartitem }) => {
   const dispatch = useDispatch();
   const quantityChangedHandler = (event) => {
     const newQty = event.target.value;
-    if (parseInt(newQty) === 0) {
+    if (parseInt(newQty, 10) === 0) {
       cartDeleteClickedHandler();
       return;
     }

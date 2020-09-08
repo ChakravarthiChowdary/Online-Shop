@@ -25,7 +25,7 @@ export const addNewOrder = (cartProducts, totalPrice) => {
         expectedDelivery: currentDate,
       };
       const userId = localStorage.getItem("idUser");
-      const response = await axios.patch(
+      await axios.patch(
         `https://general-traders.firebaseio.com/orders/${userId}/o${pathId}.json`,
         orderItem
       );
@@ -35,7 +35,6 @@ export const addNewOrder = (cartProducts, totalPrice) => {
       dispatch({ type: CLEAR_CART });
       dispatch({ type: ADD_TO_ORDER_SUCCESS, payload: orderItem });
     } catch (error) {
-      console.log(error.response.data);
       dispatch({ type: ADD_TO_ORDER_ERROR, payload: error });
     }
   };

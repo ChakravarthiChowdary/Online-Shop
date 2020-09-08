@@ -6,7 +6,7 @@ import OrderItem from "./OrderItem";
 
 const Orders = () => {
   const orders = useSelector((state) => state.order.orders);
-  console.log(orders);
+
   return (
     <Fragment>
       <Container>

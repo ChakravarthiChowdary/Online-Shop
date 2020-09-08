@@ -31,7 +31,7 @@ export const updateCartQuantity = (newQty, cartId) => {
     const cartItem = getState().cart.cartProducts.find(
       (cart) => cart.id === cartId
     );
-    cartItem.quantity = parseInt(newQty);
+    cartItem.quantity = parseInt(newQty, 10);
     dispatch({ type: UPDATE_CART_QUANTITY, payload: cartItem });
     await axios.patch(
       `https://general-traders.firebaseio.com/cart/${userId}/${cartId}.json`,
@@ -57,7 +57,8 @@ export const addProductToCart = (cartItem, quantity) => {
       (product) => product.id === cartItem.id
     );
     if (cartProduct) {
-      cartItem.quantity = parseInt(quantity) + parseInt(cartProduct.quantity);
+      cartItem.quantity =
+        parseInt(quantity, 10) + parseInt(cartProduct.quantity, 10);
     } else {
       cartItem.quantity = quantity;
     }

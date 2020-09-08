@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -26,10 +26,14 @@ const ProductItem = ({ product, openSnackBar }) => {
   const isFav = useSelector((state) =>
     state.fav.favouriteProducts.find((prod) => prod.id === product.id)
   );
-  const [fav, setFav] = useState(isFav);
+
+  const [fav, setFav] = useState(false);
   const [signIn, setSignIn] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
+  useEffect(() => {
+    setFav(isFav);
+  }, []);
 
   const useStyles = makeStyles((theme) => ({
     icon: {
@@ -108,7 +112,7 @@ const ProductItem = ({ product, openSnackBar }) => {
   };
 
   const quantityChangedHandler = (event) => {
-    if (parseInt(event.target.value) <= 0) {
+    if (parseInt(event.target.value, 10) <= 0) {
       setQuantity(1);
     } else {
       setQuantity(event.target.value);
