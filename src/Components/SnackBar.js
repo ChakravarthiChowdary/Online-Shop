@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import Alert from "@material-ui/lab/Alert";
 
 const SnackBar = ({
   openStatus,
@@ -20,7 +21,7 @@ const SnackBar = ({
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "left",
+          horizontal: "center",
         }}
         open={openStatus}
         autoHideDuration={6000}
@@ -47,7 +48,7 @@ const SnackBar = ({
             </IconButton>
           </React.Fragment>
         }
-      />
+      ></Snackbar>
     </div>
   );
 };

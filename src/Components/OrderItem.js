@@ -6,8 +6,10 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { useDispatch } from "react-redux";
 
 import OrderDetailsItem from "./OrderDetailsItem";
+import { deleteOrder } from "../Store/Actions/orderCreator";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderItem = ({ order }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   let deliveryDate = new Date(order.expectedDelivery);
   const month = deliveryDate.getMonth() + 1;
   deliveryDate =
@@ -50,6 +53,12 @@ const OrderItem = ({ order }) => {
     month.toString() +
     "/" +
     deliveryDate.getFullYear().toString();
+  const localDeliveryDate = new Date(order.expectedDelivery);
+  localDeliveryDate.setDate(localDeliveryDate.getDate() - 3);
+  const currentDate = new Date();
+  const deleteClickedHandler = () => {
+    dispatch(deleteOrder(order.id));
+  };
   return (
     <div className={classes.root}>
       <Accordion>
@@ -68,7 +77,12 @@ const OrderItem = ({ order }) => {
             <Typography className={classes.delivery}>
               Expected Delivery: {deliveryDate}
             </Typography>
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={deleteClickedHandler}
+              disabled={currentDate > localDeliveryDate}
+            >
               DELETE
             </Button>
           </div>

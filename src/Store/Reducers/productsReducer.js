@@ -19,6 +19,7 @@ const productsReducer = (state = initialState, action) => {
       return stateUpdate(state, {
         loading: false,
         availableProducts: action.payload,
+        error: null,
       });
     case GET_ALL_PRODUCTS_FAIL:
       return stateUpdate(state, { loading: false, error: action.payload });

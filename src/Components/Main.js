@@ -1,6 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Container from "@material-ui/core/Container";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Button } from "@material-ui/core";
 
 import Navigation from "./Navigation";
 import Products from "./Products";
@@ -18,6 +22,8 @@ const Main = () => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState("");
   const products = useSelector((state) => state.products.availableProducts);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
   const authInfo = useSelector((state) => state.auth.authInfo);
   const filteredProducts = products.filter((product) => {
     return product.title.toLowerCase().includes(filter.toLowerCase());
@@ -25,7 +31,17 @@ const Main = () => {
   const favouriteProducts = useSelector((state) => state.fav.favouriteProducts);
   const token = localStorage.getItem("idToken");
 
-  useEffect(() => {
+  const useStyles = makeStyles((theme) => ({
+    loadError: {
+      display: "flex",
+      flexDirection: "column",
+      height: "80vh",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  }));
+
+  const loadData = () => {
     dispatch(getAllProducts());
     if (token) {
       dispatch(autoLogin());
@@ -33,7 +49,13 @@ const Main = () => {
       dispatch(getCartproducts());
       dispatch(getOrders());
     }
+  };
+
+  useEffect(() => {
+    loadData();
   }, [dispatch, token]);
+
+  const classes = useStyles();
 
   const filterProducts = (searchValue) => {
     setFilter(searchValue);
@@ -137,7 +159,28 @@ const Main = () => {
   return (
     <Fragment>
       <Navigation filterProducts={filterProducts} />
-      {routes}
+      {!error ? (
+        !loading ? (
+          routes
+        ) : (
+          <Container className={classes.loadError} maxWidth="lg">
+            <CircularProgress color="secondary" />
+          </Container>
+        )
+      ) : (
+        <Container className={classes.loadError} maxWidth="lg">
+          <Typography variant="h6">{error}</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            style={{ marginTop: "1rem" }}
+            onClick={loadData}
+          >
+            Try Again
+          </Button>
+        </Container>
+      )}
     </Fragment>
   );
 };

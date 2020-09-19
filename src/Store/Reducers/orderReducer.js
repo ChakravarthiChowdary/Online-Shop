@@ -5,6 +5,9 @@ import {
   GET_ORDERS_SUCCESS,
   GET_ORDERS_START,
   GET_ORDERS_FAIL,
+  DELETE_ORDER_START,
+  DELETE_ORDER_SUCCESS,
+  DELETE_ORDER_FAIL,
 } from "../Actions/actionTypes";
 import stateUpdate from "../../Utilities/stateUpdate";
 
@@ -36,6 +39,19 @@ const orderReducer = (state = initialState, action) => {
         orders: action.payload,
       });
     case GET_ORDERS_FAIL:
+      return stateUpdate(state, { loading: false, error: action.payload });
+    case DELETE_ORDER_START:
+      return stateUpdate(state, { loading: true });
+    case DELETE_ORDER_SUCCESS:
+      const updatedOrders = state.orders.filter(
+        (order) => order.id !== action.payload
+      );
+      return stateUpdate(state, {
+        loading: false,
+        orders: updatedOrders,
+        error: null,
+      });
+    case DELETE_ORDER_FAIL:
       return stateUpdate(state, { loading: false, error: action.payload });
     default:
       return state;

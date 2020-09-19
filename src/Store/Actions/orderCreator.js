@@ -8,14 +8,24 @@ import {
   GET_ORDERS_START,
   GET_ORDERS_SUCCESS,
   GET_ORDERS_FAIL,
+  DELETE_ORDER_SUCCESS,
+  DELETE_ORDER_START,
+  DELETE_ORDER_FAIL,
 } from "./actionTypes";
+
+const randomStr = (len, arr) => {
+  let ans = "";
+  for (var i = len; i > 0; i--) {
+    ans += arr[Math.floor(Math.random() * arr.length)];
+  }
+  return ans;
+};
 
 export const addNewOrder = (cartProducts, totalPrice) => {
   return async (dispatch) => {
     try {
       dispatch({ type: ADD_TO_ORDER_START });
-      const id = (Math.random() * 10).toFixed(3);
-      const pathId = Math.round(id);
+      const id = randomStr(8, "12345abcde");
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 7);
       const orderItem = {
@@ -26,7 +36,7 @@ export const addNewOrder = (cartProducts, totalPrice) => {
       };
       const userId = localStorage.getItem("idUser");
       await axios.patch(
-        `https://general-traders.firebaseio.com/orders/${userId}/o${pathId}.json`,
+        `https://general-traders.firebaseio.com/orders/${userId}/o${id}.json`,
         orderItem
       );
       await axios.delete(
@@ -55,6 +65,21 @@ export const getOrders = () => {
       dispatch({ type: GET_ORDERS_SUCCESS, payload: ordersArray });
     } catch (error) {
       dispatch({ type: GET_ORDERS_FAIL, payload: error });
+    }
+  };
+};
+
+export const deleteOrder = (orderId) => {
+  return async (dispatch) => {
+    try {
+      const userId = localStorage.getItem("idUser");
+      dispatch({ type: DELETE_ORDER_START });
+      await axios.delete(
+        `https://general-traders.firebaseio.com/orders/${userId}/o${orderId}.json`
+      );
+      dispatch({ type: DELETE_ORDER_SUCCESS, payload: orderId });
+    } catch (error) {
+      dispatch({ type: DELETE_ORDER_FAIL, payload: error });
     }
   };
 };
